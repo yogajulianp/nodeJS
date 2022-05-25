@@ -1,0 +1,460 @@
+{
+    "openapi":"3.0.2",
+    "info": {
+      "title":"Belajar OpenAPI",
+      "version":"1.0",
+      "description": "Untuk belajar membuat RESTfull API",
+      "termsOfService": "www.github.com/yogajulianp",
+      "contact": {
+        "name": "Yoga Julian Prasutiyo",
+        "email": "yogajprasutiyo@gmail.com",
+        "url": "wwww.domain.com"
+      },
+      "license": {
+        "name": "APACHE 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0"
+      }
+    },
+    "servers": [
+      { 
+        "description": "TodoList RESTfull API Server - Yoga Julian",
+        "url":"https://{environment}.api.server.test/v1",
+        "variables": {
+          "environment" : {
+            "description": "Server Environment",
+            "default": "dev",
+            "enum": [
+              "dev",
+              "qa",
+              "prod"
+            ]
+          }
+        }
+      }
+    ],
+    "externalDocs": {
+      "description": "Media sosial linkedin",
+      "url" : "https://www.linkedin.com/"
+    },
+    "paths": {
+      "/todolist" : {
+        "get" : {
+          "security": [
+            {
+              "TodolistAuth":[]
+            }
+          ],
+          "tags":["TodoList"],
+          "summary": "Get all todolist data",
+          "description": "Get all active todolist data by default",
+          "parameters": [
+            {
+              "name": "include-done",
+              "in":"query",
+              "required": false,
+              "description": "Is include done todolist",
+              "schema": {
+                "type": "boolean",
+                "nullable": true,
+                "default": false
+              }
+            }, 
+            {
+              "name": "name",
+              "in": "query",
+              "required": false,
+              "description": "Filter todolist by name",
+              "schema":{
+                "type": "string",
+                "nullable":true,
+                "minLength": 1,
+                "maxLength": 100 
+              },
+              "examples": {
+                "JavaScript":{
+                  "description": "example nama JavaScript",
+                  "value" : "JavaScript"
+                },
+                "TypeScript":{
+                  "description": "example nama TypeScript",
+                  "value": "TypeScript"
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success get all todolist",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref":"#/components/schemas/ArrayTodoList"
+                  },
+                  "examples": {
+                    "success":{
+                      "description": "Example success get all todolist",
+                      "value": [
+                        {
+                          "id": "1",
+                          "name": "JavaScript",
+                          "priority": 3,
+                          "tags": [
+                              "JavaScript", 
+                              "Programming"
+                          ]
+                        },
+                        {
+                          "id": "2",
+                          "name": "TypeScript",
+                          "priority": 7,
+                          "tags": [
+                              "TypeScript", 
+                              "Programming"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+
+          }
+        },
+        "post" : {
+          "security": [
+            {
+              "TodolistAuth":[]
+            }
+          ],
+          "tags":["TodoList"],
+          "summary": "Create new todolist",
+          "description": "Create new todolist to database",
+          "requestBody":{
+            "required": true,
+            "content": {
+              "application/json" : {
+                "schema":{
+                  "$ref": "#/components/schemas/CreateOrUpdateTodoList"
+                },
+                "examples": {
+                  "JavaScript": {
+                    "description": "Example create todoList JavaScript",
+                    "value": {
+                      "name": "JavaScript",
+                      "priority" : 3,
+                      "tags":[
+                        "JavaScript",
+                        "Backend"
+                      ]
+                    }
+                  },
+                  "TyperScript": {
+                    "description": "Example create todoList TypeScript",
+                    "value": {
+                      "name": "TypeScript",
+                      "priority" : 7,
+                      "tags":[
+                        "TypeScript",
+                        "Backend"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200":{
+              "description": "Success create todolist",
+              "content": {
+                "application/json":{
+                  "schema":{
+                    "$ref": "#/components/schemas/TodoList"
+                  },
+                  "examples": {
+                    "javaScript" :{
+                      "description": "Success create javaScript todolist",
+                      "value":{
+                        "id": "1",
+                        "name": "JavaScript",
+                        "priority": 3,
+                        "tags": [
+                            "JavaScript", 
+                            "Programming"
+                        ]
+                      }
+                    },
+                    "TyperScript": {
+                      "description": "Success create TypeScript todolist",
+                      "value": {
+                        "id": "2",
+                        "name": "TypeScript",
+                        "priority": 7,
+                        "tags": [
+                            "TypeScript", 
+                            "Programming"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/todolist/{todolistId}" : {
+        "put" : {
+          "security": [
+            {
+              "TodolistAuth":[]
+            }
+          ],
+          "tags":["TodoList"],
+          "summary": "Update existing todolist",
+          "description": "Update existing todolist in database",
+          "parameters": [
+            {
+              "$ref":"#/components/parameters/TodolistId"
+              
+            }
+          ],
+          "requestBody":{
+            "required": true,
+            "content": {
+              "application/json" : {
+                "schema":{
+                  "$ref":"#/components/schemas/CreateOrUpdateTodoList"
+                },
+                "examples": {
+                  "JavaScript": {
+                    "description": "Example update todoList JavaScript",
+                    "value": {
+                      "name": "JavaScript",
+                      "priority" : 3,
+                      "tags":[
+                        "JavaScript",
+                        "Backend"
+                      ]
+                    }
+                  },
+                  "TyperScript": {
+                    "description": "Example update todoList TypeScript",
+                    "value": {
+                      "name": "TypeScript",
+                      "priority" : 7,
+                      "tags":[
+                        "TypeScript",
+                        "Backend"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200":{
+              "description": "Success update todolist",
+              "content": {
+                "application/json":{
+                  "schema":{
+                    "$ref":"#/components/schemas/TodoList"
+                  },
+                  "examples": {
+                    "javaScript" :{
+                      "description": "Success update javaScript todolist",
+                      "value":{
+                        "id": "1",
+                        "name": "JavaScript",
+                        "priority": 3,
+                        "tags": [
+                            "JavaScript", 
+                            "Programming"
+                        ]
+                      }
+                    },
+                    "TyperScript": {
+                      "description": "Success update TypeScript todolist",
+                      "value": {
+                        "id": "2",
+                        "name": "TypeScript",
+                        "priority": 7,
+                        "tags": [
+                            "TypeScript", 
+                            "Programming"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete" : {
+          "security": [
+            {
+              "TodolistAuth":[]
+            }
+          ],
+          "tags":["TodoList"],
+          "summary": "Delete existing todolist",
+          "description": "Delete existing todolist in database",
+          "parameters": [
+            {
+              "name": "todolistId",
+              "in": "path",
+              "required": true,
+              "description": "Todolist id for deleted data",
+              "schema":{
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              }
+            }
+          ],
+          "responses": {
+            "200":{
+              "description": "Success delete todolist",
+              "content": {
+                "application/json": {
+                  "schema":{
+                    "type": "object",
+                    "properties": {
+                      "success":{
+                        "type": "boolean"
+                      }
+                    }
+                  },
+                  "examples": {
+                    "success":{
+                      "description": "Success delete todolist",
+                      "value": {
+                        "success": true
+                      }
+                
+                    }
+                  }
+                }
+              }
+            },
+            "404":{
+              "description": "Failed delete todolist, not found data",
+              "content": {
+                "application/json": {
+                  "schema":{
+                    "type": "object",
+                    "properties": {
+                      "success":{
+                        "type": "boolean"
+                      }
+                    }
+                  },
+                  "examples": {
+                    "failed":{
+                      "description": "Failed delete todolist",
+                      "value": {
+                        "success": false
+                      }
+                
+                    }
+                  }
+                }
+              }
+            }
+
+          }
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "TodolistAuth" :{
+          "description": "Authentication untuk Todolist RESTful API",
+          "type":"apiKey",
+          "in": "header",
+          "name": "Auth-API-Key"
+        }
+      },
+      "parameters": {
+        "TodolistId": {
+          "name": "todolistId",
+          "in": "path",
+          "required": true,
+          "description": "Todolist id for updated data",
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "examples":{
+            "JavaScript":{
+              "description": "Sample todolist id for JavaScript",
+              "value": "1"
+            },
+            "TypeScript": {
+              "description": "Sample todolist id for TypeScript",
+              "value":"2"
+            }
+          }
+        }
+      },
+      "schemas": {
+        "TodoList":{
+          "type": "object",
+          "properties": {
+            "id":{
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "priority":{
+              "type": "number",
+              "format": "int32"
+            },
+            "tags":{
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "CreateOrUpdateTodoList":{
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "required": true
+            },
+            "priority":{
+              "type": "number",
+              "format": "int32",
+              "required": true,
+              "default":1
+
+            },
+            "tags":{
+              "type": "array",
+              "required": false,
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "ArrayTodoList":{
+          "type":"array",
+          "items":{
+            "$ref" : "#/components/schemas/TodoList"
+          }
+        }
+      }
+    }
+  }
